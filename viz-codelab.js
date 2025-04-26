@@ -36,8 +36,38 @@ function drawViz(data) {
     document.body.appendChild(container);
   }
 
-  // Render the viz.
-  container.textContent = 'Hello, viz world!';
+  // Create the table.
+  const table = document.createElement('table');
+  const tableHeader = document.createElement('thead');
+  const tableBody = document.createElement('tbody');
+
+  data.tables.DEFAULT.headers.forEach(function (column) {
+    const tableColumn = document.createElement('th');
+    tableColumn.textContent = column.name;
+    tableHeader.appendChild(tableColumn);
+  });
+
+  data.tables.DEFAULT.rows.forEach(function(row) {
+    const tableRow = document.createElement('tr');
+    row.forEach(function(cell) {
+      const tableCell = document.createElement('td');
+      if (typeof cell == 'number') {
+        tableCell.textContent = new Intl.NumberFormat().format(cell);
+      } else {
+        tableCell.textContent = cell;
+      }
+      tableRow.appendChild(tableCell);
+    });
+    tableBody.appendChild(tableRow);
+  });
+  table.appendChild(tableHeader);
+  table.appendChild(tableBody);
+
+  // Set header color based on style control.
+  tableHeader.style.backgroundColor = data.style.headerBg.value.color;
+
+  // Render the table.
+  container.appendChild(table);
 
 }
 
